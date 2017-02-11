@@ -1,0 +1,66 @@
+<head>
+<link rel="stylesheet" type="text/css" href="myTable.css">
+</head>
+
+<!--<div class="datagrid"><table>
+<thead><tr><th>header</th><th>header</th><th>header</th><th>header</th></tr></thead>
+<tfoot><tr><td colspan="4"><div id="paging"><ul><li><a href="#"><span>Previous</span></a></li><li><a href="#" class="active"><span>1</span></a></li><li><a href="#"><span>2</span></a></li><li><a href="#"><span>3</span></a></li><li><a href="#"><span>4</span></a></li><li><a href="#"><span>5</span></a></li><li><a href="#"><span>Next</span></a></li></ul></div></tr></tfoot>
+<tbody><tr><td>data</td><td>data</td><td>data</td><td>data</td></tr>
+<tr class="alt"><td>data</td><td>data</td><td>data</td><td>data</td></tr>
+<tr><td>data</td><td>data</td><td>data</td><td>data</td></tr>
+<tr class="alt"><td>data</td><td>data</td><td>data</td><td>data</td></tr>
+<tr><td>data</td><td>data</td><td>data</td><td>data</td></tr>
+</tbody>
+</table></div>-->
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+$(function () {
+    $("#upload").bind("click", function () {
+        var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+        if (regex.test($("#fileUpload").val().toLowerCase())) {
+            if (typeof (FileReader) != "undefined") {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var table = $("<div class='datagrid' /><table />");
+                    var rows = e.target.result.split("\n");
+                    var thead = $("<thead /><tr />");
+                    var headers = rows[0].split(",");
+                    for (var j = 0; j < headers.length; j++) {
+                            var head = $("<th />");
+                            head.html(headers[j]);
+                            thead.append(head);
+                        }
+					table.append(headers);
+					console.log("Header:");
+					console.log(table);
+                    for (var i = 1; i < rows.length; i++) {
+                        var row = $("<tr />");
+                        var cells = rows[i].split(",");
+                        for (var j = 0; j < cells.length; j++) {
+                            var cell = $("<td />");
+                            cell.html(cells[j]);
+                            row.append(cell);
+                        }
+                        table.append(row);
+                    }
+                    $("#dvCSV").html('');
+                    $("#dvCSV").append(table);
+                    console.log("Full table:");
+					console.log(table);
+                }
+                reader.readAsText($("#fileUpload")[0].files[0]);
+            } else {
+                alert("This browser does not support HTML5.");
+            }
+        } else {
+            alert("Please upload a valid CSV file.");
+        }
+    });
+});
+</script>
+<input type="file" id="fileUpload" />
+<input type="button" id="upload" value="Upload" />
+<hr />
+<div id="dvCSV">
+</div>

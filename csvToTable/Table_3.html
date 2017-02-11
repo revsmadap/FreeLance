@@ -1,0 +1,46 @@
+<head>
+<link rel="stylesheet" type="text/css" href="myTable.css">
+</head>
+<script type="text/javascript">
+
+function makeTable(container, data) {
+    var table = $("<table/>").addClass('datagrid');
+    $.each(data, function(rowIndex, r) {
+        var row = $("<tr/>");
+        $.each(r, function(colIndex, c) { 
+            row.append($("<t"+(rowIndex == 0 ?  "h" : "d")+"/>").text(c));
+        });
+        table.append(row);
+    });
+    return container.append(table);
+}
+</script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+$(function () {
+    $("#upload").bind("click", function () {
+        var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+        if (regex.test($("#fileUpload").val().toLowerCase())) {
+            if (typeof (FileReader) != "undefined") {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    
+                    var rows = e.target.result.split("\n");
+                    var table = makeTable($(document.body),rows);
+                   
+                }
+                reader.readAsText($("#fileUpload")[0].files[0]);
+            } else {
+                alert("This browser does not support HTML5.");
+            }
+        } else {
+            alert("Please upload a valid CSV file.");
+        }
+    });
+});
+</script>
+<input type="file" id="fileUpload" />
+<input type="button" id="upload" value="Upload" />
+<hr />
+<div id="dvCSV">
+</div>

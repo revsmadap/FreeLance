@@ -1,0 +1,74 @@
+<head>
+<link rel="stylesheet" type="text/css" href="myTable.css">
+<link rel="stylesheet" type="text/css" href="responsive.css">
+<!-- <style>
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+</style> -->
+</head>
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+$(function () {
+    $("#upload").bind("click", function () {
+        var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+        if (regex.test($("#fileUpload").val().toLowerCase())) {
+            if (typeof (FileReader) != "undefined") {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var file = document.getElementById("fileUpload").files[0].name;;
+                    console.log("file is");
+                    console.log(file);
+                    var cap1 = "<caption style='font-size:200%;color:#4DC3FA'>";
+                    var cap2 = "</caption>";
+                    var caption = cap1.concat(file,cap2);
+                   // console.log(e.target.file.name);
+                    var table = $("<table class='container' />");
+                   table.append(caption);
+                    var rows = e.target.result.split("\n");
+                    for (var i = 0; i < rows.length; i++) {
+                        var row = $("<tr />");
+                        //row.append($("<t"+(i == 0 ?  "h" : "d")+"/>").text(c));
+                        var cells = rows[i].split(",");
+                        for (var j = 0; j < cells.length; j++) {
+                            row.append($("<t"+(i == 0 ?  "h" : "d")+"/>").text(cells[j]));
+                           /* if()
+                            var cell = $("<td />");
+                            cell.html(cells[j]);
+                            row.append(cell);
+*/                        }
+                        table.append(row);
+                    }
+                    $("#dvCSV").html('');
+                    $("#dvCSV").append(table);
+                }
+                reader.readAsText($("#fileUpload")[0].files[0]);
+            } else {
+                alert("This browser does not support HTML5.");
+            }
+        } else {
+            alert("Please upload a valid CSV file.");
+        }
+    });
+});
+</script>
+<input type="file" id="fileUpload" />
+<input type="button" id="upload" value="Upload" />
+<hr />
+<div id="dvCSV" class="container">
+</div>
